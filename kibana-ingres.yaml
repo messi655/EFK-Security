@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: securees
+  name: kibana
+  labels:
+    component: kibana
+spec:
+  selector:
+    component: kibana
+  ports:
+  - name: http
+    port: 5601
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    namespace: securees
+    name: kibana
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      #traefik.ingress.kubernetes.io/auth-type: "basic"
+      #traefik.ingress.kubernetes.io/auth-secret: "kibana-authen"
+spec:
+    rules:
+      - host: kibana.yourdomain.com
+        http:
+            paths:
+                - path: /
+                  backend:
+                      serviceName: kibana
+                      servicePort: http

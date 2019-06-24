@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kibana
+  namespace: securees
+  labels:
+    app: kibana
+data:
+  # kibana.yml is mounted into the Kibana container
+  # see https://github.com/elastic/kibana/blob/master/config/kibana.yml
+  # Kubernetes Ingress is used to route kib.the-project.d4ldev.txn2.com
+  kibana.yml: |-
+    server.name: kibana.yourdomain.com
+    server.host: "0"
+    elasticsearch.hosts: http://security-master:9200
+    xpack.security.enabled: true
+    elasticsearch.username: "elastic"
+    elasticsearch.password: "changeme"

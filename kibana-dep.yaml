@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: securees
+  name: kibana
+  labels:
+    component: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+     component: kibana
+  template:
+    metadata:
+      labels:
+        component: kibana
+    spec:
+      containers:
+      - name: kibana
+        image: docker.elastic.co/kibana/kibana:7.1.1
+        env:
+        - name: CLUSTER_NAME
+          value: elasticsearch # name of the Elasticsearch cluster defined in the first part
+        ports:
+        - containerPort: 5601
+          name: http
+        volumeMounts:
+        - name: kibana-config-volume
+          mountPath: /usr/share/kibana/config
+      nodeSelector:
+        worker-node: logging
+      volumes:
+      - name: kibana-config-volume
+        configMap:
+          name: kibana
+      
